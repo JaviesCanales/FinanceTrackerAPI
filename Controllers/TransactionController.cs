@@ -52,6 +52,21 @@ namespace FinanceTrackerAPI.Controllers
             }
             return Ok(transaction);
         }
+        [HttpPut("{id}")]
+        public IActionResult EditTransaction(int id, [FromBody] Transaction updatedtransaction)
+        {
+            var transaction = _context.Transactions.FirstOrDefault(t => t.Id == id);
+            if (transaction == null)
+            {
+                return NotFound();
+            }
+            transaction.Description = updatedtransaction.Description;
+            transaction.Amount = updatedtransaction.Amount;
+            transaction.Category = updatedtransaction.Category;
+            transaction.Type = updatedtransaction.Type;
+            _context.SaveChanges();
+            return Ok(transaction);
+        }
 
     }
    

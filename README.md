@@ -17,6 +17,7 @@ A REST API built with C# and .NET that allows users to track income and expenses
 - Edit transactions by ID (PUT)
 - Delete transactions by ID (DELETE)
 - Data persists after API restart via MySQL database
+- Data validation - required fields enforced, amount must be positive, type must be income or expense, not capital sensitive
 
 ## How to Run
 
@@ -116,6 +117,5 @@ A REST API built with C# and .NET that allows users to track income and expenses
 ## Known Limitations
 
 - No user authentication — any user can access and modify all transactions
-- No data validation — invalid or missing fields are not rejected
 - No spending calculations or budget summaries (planned for Python reporting script)
 - Single user only — no multi-user support

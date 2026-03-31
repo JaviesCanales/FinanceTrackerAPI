@@ -24,6 +24,10 @@ namespace FinanceTrackerAPI.Controllers
         [HttpPost]
         public IActionResult AddTransaction([FromBody] Transaction transaction)
         {
+            if (transaction.Type.ToLower() != "expense" && transaction.Type.ToLower() != "income")
+            {
+                return BadRequest();
+            } 
             _context.Transactions.Add(transaction);      
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetTransactions), transaction);     
@@ -60,6 +64,10 @@ namespace FinanceTrackerAPI.Controllers
             {
                 return NotFound();
             }
+            if (updatedtransaction.Type.ToLower() != "expense" && updatedtransaction.Type.ToLower() != "income")
+            {
+                return BadRequest();
+            } 
             transaction.Description = updatedtransaction.Description;
             transaction.Amount = updatedtransaction.Amount;
             transaction.Category = updatedtransaction.Category;

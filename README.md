@@ -80,6 +80,35 @@ A REST API built with C# and .NET that allows users to track income and expenses
 ```
 - **Response:** 201 Created with the new transaction
 
+## Python Reporting Script
+
+A Python script that connects directly to the MySQL database and generates a spending summary grouped by category.
+
+### Requirements
+- Python 3
+- mysql-connector-python
+
+### Install dependency
+```
+pip3 install mysql-connector-python
+```
+
+### Run
+```
+python3 report.py
+```
+
+### Output
+Displays total expenses, income, spendings per category and calculates net balance:
+```
+===== Expense Summary =====
+Housing: $800.00
+Entertainment: $35.00
+Total Income: $1577.00
+Total Expense: $835.00
+Balance: $742.00
+```
+
 ### Edit Transaction
 - **Method:** PUT
 - **URL:** `/api/transactions/{id}`
@@ -117,5 +146,4 @@ A REST API built with C# and .NET that allows users to track income and expenses
 ## Known Limitations
 
 - No user authentication — any user can access and modify all transactions
-- No spending calculations or budget summaries (planned for Python reporting script)
 - Single user only — no multi-user support

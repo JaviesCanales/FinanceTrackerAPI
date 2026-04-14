@@ -16,10 +16,23 @@ namespace FinanceTrackerAPI.Controllers
         }
 
         [HttpGet]
-        public List<Transaction> GetTransactions()
+        public IActionResult GetTransactions([FromQuery] string? type, string? category)
         {
-            return _context.Transactions.ToList();
+            var query = _context.Transactions.AsQueryable();
+            if (!string.IsNullOrEmpty(type))
+            {
+                query = query.Where(t => t.Type.ToLower() == type.ToLower());
+            }
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                query = query.Where(t => t.Category.ToLower() == category.ToLower());
+            }
+            return Ok(query.ToList());
+
+            
         }
+
 
         [HttpPost]
         public IActionResult AddTransaction([FromBody] Transaction transaction)
@@ -76,6 +89,7 @@ namespace FinanceTrackerAPI.Controllers
             return Ok(transaction);
         }
 
+        
     }
    
 }

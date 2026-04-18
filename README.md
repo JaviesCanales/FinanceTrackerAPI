@@ -13,6 +13,7 @@ A REST API built with C# and .NET that allows users to track income and expenses
 
 - Add transactions (POST)
 - Retrieve all transactions (GET)
+- Retrieve transactions with filtered by type and category (GET)
 - Retrieve a single transaction by ID (GET)
 - Edit transactions by ID (PUT)
 - Delete transactions by ID (DELETE)
@@ -56,10 +57,17 @@ A REST API built with C# and .NET that allows users to track income and expenses
 
 ## API Endpoints
 
-### Get All Transactions
+### Get all or filtered Transactions 
 - **Method:** GET
-- **URL:** `/api/transactions`
+- **URL:** `/api/transactions`  
 - **Response:** List of all transactions
+
+- **URL:** `/api/transactions?category=entertainment`
+- **Response:** List all entertainment transactions
+
+- **URL:** `/api/transactions?type=expense`
+- **Response:** List all expenses transactions
+
 
 ### Get Transaction by ID
 - **Method:** GET

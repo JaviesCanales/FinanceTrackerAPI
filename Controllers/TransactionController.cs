@@ -88,7 +88,6 @@ namespace FinanceTrackerAPI.Controllers
             _context.SaveChanges();
             return Ok(transaction);
         }
-
         
     }
    

@@ -37,3 +37,4 @@
 /Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/bin/Debug/net9.0/MySqlConnector.dll
 /Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/bin/Debug/net9.0/Pomelo.EntityFrameworkCore.MySql.dll
 /Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/obj/Debug/net9.0/FinanceTrackerAPI.sourcelink.json
+/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/bin/Debug/net9.0/BCrypt.Net-Next.dll

@@ -55,7 +55,7 @@ A REST API built with C# and .NET that allows users to track income and expenses
 
 5. Test endpoints using Postman at `http://localhost:5118/api/transactions`
 
-## API Endpoints
+## Transaction API Endpoints
 
 ### Get all or filtered Transactions 
 - **Method:** GET
@@ -87,6 +87,44 @@ A REST API built with C# and .NET that allows users to track income and expenses
   }
 ```
 - **Response:** 201 Created with the new transaction
+
+## User API Endpoints
+
+User management endpoints with secure password hashing and DTO pattern to protect sensitive data.
+
+### Get All Users
+- **Method:** GET
+- **URL:** `/api/user`
+- **Response:** List of users (id, name, email — password never returned)
+
+### Get User by ID
+- **Method:** GET
+- **URL:** `/api/user/{id}`
+- **Response:** Single user or 404 if not found
+
+### Register User
+- **Method:** POST
+- **URL:** `/api/user`
+- **Body:**
+```json
+  {
+    "name": "Javies",
+    "email": "javies@email.com",
+    "password": "password123"
+  }
+```
+- **Response:** 201 Created with user data (no password)
+
+### Edit User
+- **Method:** PUT
+- **URL:** `/api/user/{id}`
+- **Body:** Any combination of name, email, password (all optional)
+- **Response:** 204 No Content
+
+### Delete User
+- **Method:** DELETE
+- **URL:** `/api/user/{id}`
+- **Response:** 200 with deleted user or 404 if not found
 
 ## Python Reporting Script
 

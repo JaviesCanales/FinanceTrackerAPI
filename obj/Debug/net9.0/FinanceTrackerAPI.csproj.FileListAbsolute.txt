@@ -38,3 +38,11 @@
 /Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/bin/Debug/net9.0/Pomelo.EntityFrameworkCore.MySql.dll
 /Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/obj/Debug/net9.0/FinanceTrackerAPI.sourcelink.json
 /Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/bin/Debug/net9.0/BCrypt.Net-Next.dll
+/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/bin/Debug/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/bin/Debug/net9.0/Microsoft.IdentityModel.Abstractions.dll
+/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/bin/Debug/net9.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/bin/Debug/net9.0/Microsoft.IdentityModel.Logging.dll
+/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.dll
+/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/bin/Debug/net9.0/Microsoft.IdentityModel.Tokens.dll
+/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/bin/Debug/net9.0/System.IdentityModel.Tokens.Jwt.dll

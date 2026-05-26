@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using FinanceTrackerAPI.Models;
 using FinanceTrackerAPI.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FinanceTrackerAPI.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/transactions")]
     public class TransactionController : ControllerBase
     {

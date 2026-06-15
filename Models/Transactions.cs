@@ -11,7 +11,7 @@ namespace FinanceTrackerAPI.Models
         public string Description { get; set; }
         [Required]
         [Range(0.01, double.MaxValue)]
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
         [Required]
         public string Category { get; set; }
         [Required]

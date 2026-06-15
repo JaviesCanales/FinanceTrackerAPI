@@ -43,6 +43,10 @@ namespace FinanceTrackerAPI.Controllers
             {
                 return BadRequest();
             } 
+            if (transaction.Amount < 1)
+            {
+                return BadRequest();
+            }
             _context.Transactions.Add(transaction);      
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetTransactions), transaction);     
@@ -51,7 +55,7 @@ namespace FinanceTrackerAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteTransaction(int id)
         {
-            var transaction = _context.Transactions.FirstOrDefault(t => t.Id == id);
+            var transaction = _context.Transactions.Find(id);
             if (transaction == null)
             {
                 return NotFound();
@@ -64,7 +68,7 @@ namespace FinanceTrackerAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult GetId(int id)
         {
-            var transaction = _context.Transactions.FirstOrDefault(t => t.Id == id);
+            var transaction = _context.Transactions.Find(id);
             if (transaction == null)
             {
                 return NotFound();
@@ -74,7 +78,7 @@ namespace FinanceTrackerAPI.Controllers
         [HttpPut("{id}")]
         public IActionResult EditTransaction(int id, [FromBody] Transaction updatedtransaction)
         {
-            var transaction = _context.Transactions.FirstOrDefault(t => t.Id == id);
+            var transaction = _context.Transactions.Find(id);
             if (transaction == null)
             {
                 return NotFound();
@@ -83,10 +87,22 @@ namespace FinanceTrackerAPI.Controllers
             {
                 return BadRequest();
             } 
-            transaction.Description = updatedtransaction.Description;
-            transaction.Amount = updatedtransaction.Amount;
-            transaction.Category = updatedtransaction.Category;
-            transaction.Type = updatedtransaction.Type;
+            if (updatedtransaction.Description != null)
+            {
+                transaction.Description = updatedtransaction.Description;
+            }
+            if (updatedtransaction.Amount != null)
+            {
+                transaction.Amount = updatedtransaction.Amount;
+            }
+            if (updatedtransaction.Category != null)
+            {
+                transaction.Category = updatedtransaction.Category;
+            }
+            if (updatedtransaction.Type != null)
+            {
+                transaction.Type = updatedtransaction.Type;
+            }
             _context.SaveChanges();
             return Ok(transaction);
         }

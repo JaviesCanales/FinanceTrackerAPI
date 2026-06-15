@@ -33,6 +33,14 @@ namespace FinanceTrackerAPI
         [HttpPost]
         public IActionResult AddUser([FromBody] CreateUserDTO dto)
         {
+            if (string.IsNullOrEmpty(dto.Name) || string.IsNullOrEmpty(dto.Email) || string.IsNullOrEmpty(dto.Password))
+            {
+                return BadRequest();
+            }
+            if (_context.Users.Any(u => u.Email == dto.Email))
+            {
+                return BadRequest();
+            }
             var user = new User
             {
                 Name = dto.Name.Trim(),

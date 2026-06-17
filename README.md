@@ -174,7 +174,20 @@ Balance: $742.00
 - **URL:** `/api/transactions/{id}`
 - **Response:** 200 with deleted transaction or 404 if not found
 
+## Testing
 
+Unit tests built with xUnit covering all API endpoints.
+
+### Run Tests
+cd FinanceTrackerAPI.Tests
+dotnet test
+
+### Test Coverage
+- Transaction CRUD operations
+- Transaction data validation
+- User CRUD operations  
+- User validation (duplicate email, null fields)
+- Edge cases (invalid ID's, not found scenarios)
 
 ## Bug Fixes
 
@@ -191,5 +204,4 @@ Balance: $742.00
 
 ## Known Limitations
 
-- No user authentication — any user can access and modify all transactions
 - Single user only — no multi-user support

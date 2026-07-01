@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace FinanceTrackerAPI.Controllers
 {
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [Route("api/transactions")]
     public class TransactionController : ControllerBase
     {

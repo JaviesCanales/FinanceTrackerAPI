@@ -19,6 +19,7 @@ A REST API built with C# and .NET that allows users to track income and expenses
 - Delete transactions by ID (DELETE)
 - Data persists after API restart via MySQL database
 - Data validation - required fields enforced, amount must be positive, type must be income or expense, not capital sensitive
+- Interactive frontend with real-time CRUD operations
 
 ## How to Run
 
@@ -173,6 +174,23 @@ Balance: $742.00
 - **Method:** DELETE
 - **URL:** `/api/transactions/{id}`
 - **Response:** 200 with deleted transaction or 404 if not found
+
+## Frontend
+
+An interactive web frontend built with HTML and JavaScript that connects to the Finance Tracker API in real time.
+
+### Features
+- View all transactions with live data from the API
+- Add new transactions via form
+- Edit existing transactions inline without leaving the page
+- Delete transactions with confirmation prompt
+- Stats section showing total income, expenses, and balance
+- Spending breakdown by category
+
+### How to Run
+1. Make sure the API is running on `http://localhost:5118`
+2. Open `Frontend/index.html` in your browser
+3. Use a live server extension (VS Code) for best results
 
 ## Testing
 

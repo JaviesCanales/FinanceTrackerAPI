@@ -54,3 +54,125 @@ h2 {
     padding: 8px 16px;
 }
 
+#transaction-list button:first-of-type {
+    background-color: #e8f0fe;
+    color: #1a3c5e;
+}
+
+#transaction-list button:last-of-type {
+    background-color: #fdecea;
+    color: #c0392b;
+}
+
+#transaction-list button:hover {
+    opacity: 0.85;
+    cursor: pointer;
+}
+
+#stats {
+    display: flex;
+    gap: 16px;
+    margin: 24px 0;
+}
+
+#stats div {
+    flex: 1;
+    background-color: #ffffff;
+    border-left: 1px solid #dde3ec;
+    border-right: 1px solid #dde3ec;
+    border-bottom: 1px solid #dde3ec;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #1a3c5e;
+}
+
+#total-income {
+    border-top: 4px solid #27ae60;
+}
+
+#total-expense {
+    border-top: 4px solid #c0392b;
+}
+
+#total-balance {
+    border-top: 4px solid #2980b9;
+}
+
+#add-transaction {
+    background-color: #ffffff;
+    border: 1px solid #dde3ec;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+}
+
+#transaction-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+#transaction-form input,
+#transaction-form select {
+    padding: 10px 12px;
+    border: 1px solid #dde3ec;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    flex: 1;
+    min-width: 140px;
+    color: #333333;
+}
+
+#transaction-form button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #1a3c5e;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+#transaction-form button[type="submit"]:hover {
+    background-color: #16324f;
+}
+
+#transaction-form select {
+    background-color: #ffffff;
+    color: #333333;
+    max-width: fit-content;
+}
+
+#category-breakdown {
+    background-color: #ffffff;
+    border: 1px solid #dde3ec;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+}
+
+#category-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+#category-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background-color: #f4f6f9;
+    border-radius: 6px;
+    font-size: 0.95;
+    color: #333333;
+}
+

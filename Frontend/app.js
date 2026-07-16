@@ -9,7 +9,7 @@ form.addEventListener("submit", (event) => {
 
     const description = document.getElementById("description").value;
     const amount = Number(document.getElementById("amount").value);
-    const category = document.getElementById("category").value;
+    const category = capitalize(document.getElementById("category").value);
     const type = document.getElementById("type").value;
     const transaction = {
         description,
@@ -38,7 +38,7 @@ function renderTransactions() {
     
     transactions.forEach((t) => {
         const li = document.createElement("li");
-        li.textContent = `${t.description} - $${t.amount} - ${t.category} (${t.type})`;
+        li.textContent = `${capitalize(t.description)} - $${t.amount} - ${capitalize(t.category)} (${t.type})`;
         
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "Delete";
@@ -86,31 +86,31 @@ function renderTransactions() {
                 .then(() => loadTransactions())
                 .catch(error => console.error("Error", error));
             });
-            
+
             document.getElementById("cancel-btn").addEventListener("click", () => {
                 loadTransactions();
             });
         });
 
-        li.appendChild(deleteBtn);
         li.appendChild(editBtn); 
+        li.appendChild(deleteBtn);
         transactionList.appendChild(li);
     });
     let income = 0;
     let expense = 0;
     let categoryTotal = {};
     transactions.forEach((t) => {
-        if (t.type.toLowerCase() === "income"){
+        if (t.type.toLowerCase() === "income") {
             income += t.amount;
         }
-        else{
+        if (t.type.toLowerCase() === "expense") {
             expense += t.amount;
+          
+            if (!categoryTotal[capitalize(t.category)]) {
+                categoryTotal[capitalize(t.category)] = 0;
+            }
+            categoryTotal[capitalize(t.category)] += t.amount;           
         }
-
-        if (!categoryTotal[t.category]) {
-            categoryTotal[t.category] = 0;
-        }
-        categoryTotal[t.category] += t.amount;
     });
 
     const balance = income - expense;
@@ -125,6 +125,9 @@ function renderTransactions() {
     document.getElementById("total-income").textContent = `Income: $${income.toFixed(2)}`;
     document.getElementById("total-expense").textContent = `Expense: $${expense.toFixed(2)}`;
     document.getElementById("total-balance").textContent = `Balance: $${balance.toFixed(2)}`;
+
+    const balanceEl = document.getElementById("total-balance");
+    balanceEl.style.color = balance < 0 ? "#c0392b" : "#1a3c5e";
 }
 
 function loadTransactions() {
@@ -135,6 +138,10 @@ function loadTransactions() {
         data.forEach(t=> transactions.push(t));
         renderTransactions(); 
     });
+}
+
+function capitalize(str) {
+    return str[0].toUpperCase() + str.slice(1);
 }
 
 

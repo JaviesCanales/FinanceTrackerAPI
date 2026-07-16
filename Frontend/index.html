@@ -21,28 +21,29 @@
         <section id="add-transaction">
             <h2>Add transaction</h2>
             <form id="transaction-form">
-                <label for="description">Description:</label>
+                
                 <input 
                 type="text"
                 id="description"
                 name="description"
+                placeholder="description"
                 required
                 >
 
-                <label for="amount">Amount:</label>
                 <input
                 type="number"
                 id="amount"
                 name="amount"
+                placeholder="amount"
                 step="0.01"
                 required
                 >
 
-                <label for="category">Category:</label>
                 <input
                 type="text"
                 id="category"
                 name="category"
+                placeholder="category"
                 required
                 >
 
@@ -56,7 +57,7 @@
                 
             </form>
         </section>
-        
+
         <section id="category-breakdown">
             <h2>Spending by category</h2>
             <ul id="category-list"></ul>

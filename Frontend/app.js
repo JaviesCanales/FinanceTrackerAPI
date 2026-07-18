@@ -114,14 +114,54 @@ function renderTransactions() {
     });
 
     const balance = income - expense;
+    if (window.categoryChart) {
+        window.categoryChart.destroy();
+    }
+    const ctx = document.getElementById("category-chart").getContext("2d");
+    window.categoryChart = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+            labels: Object.keys(categoryTotal),
+            datasets: [{
+                data: Object.values(categoryTotal),
+                backgroundColor: [
+                    "#2980b9",
+                    "#27ae60",
+                    "#e74c3c",
+                    "#f39c12",
+                    "#8e44ad",
+                    "#16a085",
+                    "#d35400"
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: "bottom"
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return ` ${context.label}: $${context.parsed.toFixed(2)}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
     const categoryList = document.getElementById("category-list");
     categoryList.innerHTML = "";
-    Object.entries(categoryTotal).forEach(([category, total]) => {
+    
+    const total = Object.values(categoryTotal).reduce((a,b) => a + b, 0);
+
+    Object.entries(categoryTotal).forEach(([category, amount]) => {
         const li = document.createElement("li");
-        li.textContent = `${category}: $${total.toFixed(2)}`;
+        const percentage = ((amount / total) * 100).toFixed(1);
+        li.textContent = `${category}: $${amount.toFixed(2)} (${percentage}%)`;
         categoryList.appendChild(li);
     });
-
     document.getElementById("total-income").textContent = `Income: $${income.toFixed(2)}`;
     document.getElementById("total-expense").textContent = `Expense: $${expense.toFixed(2)}`;
     document.getElementById("total-balance").textContent = `Balance: $${balance.toFixed(2)}`;

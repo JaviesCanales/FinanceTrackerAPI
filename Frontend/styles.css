@@ -163,7 +163,7 @@ h2 {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-top: 8px;
+    margin-top: 16px;
 }
 
 #category-list li {
@@ -172,7 +172,24 @@ h2 {
     padding: 10px 14px;
     background-color: #f4f6f9;
     border-radius: 6px;
-    font-size: 0.95;
+    font-size: 0.95rem;
     color: #333333;
 }
+#category-chart {
+    max-width: 400px;
+    max-height: 400px;
+    margin: 0 auto;
+}
 
+header {
+    background-color: #1a3c5e;
+    padding: 20px 24px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+header h1 {
+    color: #ffffff;
+    font-size: 1.6rem;
+    letter-spacing: 0.5px;
+}

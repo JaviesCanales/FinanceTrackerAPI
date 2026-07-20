@@ -41,6 +41,18 @@ ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConne
 ));
 
 var app = builder.Build();
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var error = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+        if (error != null)
+        {
+            context.Response.ContentType = "text/plain";
+            await context.Response.WriteAsync(error.Error.ToString());
+        }
+    });
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

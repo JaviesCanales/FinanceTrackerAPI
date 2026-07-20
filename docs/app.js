@@ -37,8 +37,13 @@ function renderTransactions() {
     transactionList.innerHTML = "";
     
     transactions.forEach((t) => {
+        const date = new Date (t.date).toLocaleDateString('en-US', {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+    });
         const li = document.createElement("li");
-        li.textContent = `${capitalize(t.description)} - $${t.amount} - ${capitalize(t.category)} (${t.type})`;
+        li.textContent = `${capitalize(t.description)} - $${t.amount} - ${capitalize(t.category)} (${t.type}) - ${date}`;
         
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "Delete";

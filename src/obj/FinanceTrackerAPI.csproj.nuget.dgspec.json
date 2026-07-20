@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/FinanceTrackerAPI.csproj": {}
+    "/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/src/FinanceTrackerAPI.csproj": {}
   },
   "projects": {
-    "/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/FinanceTrackerAPI.csproj": {
+    "/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/src/FinanceTrackerAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/FinanceTrackerAPI.csproj",
+        "projectUniqueName": "/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/src/FinanceTrackerAPI.csproj",
         "projectName": "FinanceTrackerAPI",
-        "projectPath": "/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/FinanceTrackerAPI.csproj",
+        "projectPath": "/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/src/FinanceTrackerAPI.csproj",
         "packagesPath": "/Users/javiescanales/.nuget/packages/",
-        "outputPath": "/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/obj/",
+        "outputPath": "/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/src/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/javiescanales/.nuget/NuGet/NuGet.Config"

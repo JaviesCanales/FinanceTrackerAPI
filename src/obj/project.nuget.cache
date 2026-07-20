@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "BUyD2ydhVTc=",
+  "dgSpecHash": "Kb+SL0h2Py4=",
   "success": true,
-  "projectFilePath": "/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/FinanceTrackerAPI/FinanceTrackerAPI.csproj",
+  "projectFilePath": "/Users/javiescanales/Documents/portfolio project/FinanceTrackerAPI/src/FinanceTrackerAPI.csproj",
   "expectedPackageFiles": [
     "/Users/javiescanales/.nuget/packages/bcrypt.net-next/4.1.0/bcrypt.net-next.4.1.0.nupkg.sha512",
     "/Users/javiescanales/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/9.0.0/microsoft.aspnetcore.authentication.jwtbearer.9.0.0.nupkg.sha512",

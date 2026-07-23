@@ -1,4 +1,4 @@
-const API_URL = "https://financetrackerapi-production-6cf0.up.railway.app/api/transactions"
+const API_URL = "https://financetrackerapi-production-6cf0.up.railway.app/api/transactions";
 const form = document.getElementById("transaction-form");
 const transactions = []
 const transactionList = document.getElementById("transaction-list");
@@ -114,7 +114,7 @@ function renderTransactions() {
             if (!categoryTotal[capitalize(t.category)]) {
                 categoryTotal[capitalize(t.category)] = 0;
             }
-            categoryTotal[capitalize(t.category)] += t.amount;           
+            categoryTotal[capitalize(t.category)] += t.amount;
         }
     });
 

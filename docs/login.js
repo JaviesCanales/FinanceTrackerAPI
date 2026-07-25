@@ -69,3 +69,15 @@ loginForm.addEventListener("submit", (event) => {
     .catch(error => console.error("Error", error));
 });
 
+document.getElementById("show-register").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("login").style.display = "none";
+    document.getElementById("register").style.display = "block";
+});
+
+document.getElementById("show-login").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("register").style.display = "none";
+    document.getElementById("login").style.display = "block";
+})
+

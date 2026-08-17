@@ -1,3 +1,7 @@
+const token = localStorage.getItem("token");
+if (!token) {
+    window.location.href = "login.html"
+}
 const API_URL = "https://financetrackerapi-production-6cf0.up.railway.app/api/transactions";
 const form = document.getElementById("transaction-form");
 const transactions = []
@@ -17,10 +21,14 @@ form.addEventListener("submit", (event) => {
         category,
         type
     };
+    
 
     fetch(API_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+         },
         body: JSON.stringify(transaction)
     })
     .then(response => response.json())
@@ -55,7 +63,10 @@ function renderTransactions() {
             }
 
             fetch(`${API_URL}/${t.id}`, {
-                method: "DELETE"
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
             })
             .then(() => {
                 loadTransactions();
@@ -85,7 +96,10 @@ function renderTransactions() {
                 };
                 fetch(`${API_URL}/${t.id}`, {
                     method: "PUT",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                     },
                     body: JSON.stringify(updated)
                 })
                 .then(() => loadTransactions())
@@ -176,7 +190,12 @@ function renderTransactions() {
 }
 
 function loadTransactions() {
-    fetch (API_URL)
+    fetch (API_URL, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    })
+    
     .then(response => response.json())
     .then(data => {
         transactions.length = 0;

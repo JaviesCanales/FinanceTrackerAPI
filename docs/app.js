@@ -40,6 +40,20 @@ form.addEventListener("submit", (event) => {
     .catch(error => console.error("Error:", error));
 });
 
+const logoutBtn = document.createElement("button");
+logoutBtn.id = "logout-btn";
+logoutBtn.textContent = "Log out";
+
+logoutBtn.addEventListener("click", () => {
+    const confirmed = confirm("Are you sure you want to log out?");
+    if (!confirmed) {
+        return;
+    }
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+});
+
+document.querySelector("header").appendChild(logoutBtn);
 
 function renderTransactions() {
     transactionList.innerHTML = "";

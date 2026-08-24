@@ -12,36 +12,39 @@
     <header>
         <h1> FinanceTracker </h1>
     </header>
-    <section id="login">
-        <h2> Log in </h2>
-        <form id="login-form">
 
-            <input
-            type="text"
-            id="email"
-            name="email"
-            placeholder="Enter your email"
-            required
-            >
+    <div id="form-container">
 
-            <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Enter your password"
-            required
-            >
-
-            <button type="submit">Log in</button>
-
-            <p>Don't have an account? <a href="#" id="show-register">Register here</a></p>
-        </form>
+        <section id="login">
+            <h2> Log in </h2>
+            <form id="login-form">
+                
+                <input
+                type="text"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+                >
+                
+                <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+                >
+                
+                <button type="submit">Log in</button>
+                
+                <p>Don't have an account? <a href="#" id="show-register">Register here</a></p>
+            </form>
         </section>
-
+        
         <section id="register" style="display: none;">
             <h2> Register </h2>
             <form id="register-form">
-
+                
                 <input 
                 type="text"
                 id="name"
@@ -49,7 +52,7 @@
                 placeholder="Full name"
                 required
                 >
-
+                
                 <input
                 type="text"
                 id="register-email"
@@ -57,7 +60,7 @@
                 placeholder="Enter your email"
                 required
                 >
-
+                
                 <input
                 type="password"
                 id="register-password"
@@ -65,21 +68,22 @@
                 placeholder="Enter your password"
                 required
                 >
-
+                
                 <input  
                 type="password"
                 id="confirm-password"
                 name="confirm-password"
                 placeholder="Confirm your password"
                 >
-
+                
                 <button type="submit">Register</button>
-
+                
                 <p>Already have an account? <a href="#" id="show-login">Log in here</a></p>
             </form>
-
+            
             <p id="message" style="display: none;"></p>
         </section>
+    </div>
 
 </body>
 </html>

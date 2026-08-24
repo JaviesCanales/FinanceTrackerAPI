@@ -1,0 +1,95 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f4f6f9;
+    color: #333333;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #1a3c5e;
+    width: 100%;
+    padding: 20px 24px;
+    text-align: 40px;
+}
+
+header h1 {
+    color: #ffffff;
+    font-size: 1.6 rem;
+}
+
+#form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+#login, #register {
+    background-color: #ffffff;
+    border: 1px solid #dde3ec;
+    border-radius: 8px;
+    padding: 32px;
+    width: 100%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+}
+
+h2 {
+    color: #1a3c5e;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+}
+
+#login-form input,
+#register-form input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #dde3ec;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+    color: #333333;
+}
+
+#login-form button[type="submit"],
+#register-form button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #1a3c5e;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+#login-form button[type="submit"]:hover,
+#register-form button[type="submit"]:hover {
+    background-color: #16324f;
+}
+
+p {
+    margin-top: 16px;
+    font-size: 0.9rem;
+    color: #666;
+    text-align: center;
+}
+
+a {
+    color: #1a3c5e;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}

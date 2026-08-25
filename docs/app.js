@@ -4,7 +4,8 @@ if (!token) {
 }
 const API_URL = "https://financetrackerapi-production-6cf0.up.railway.app/api/transactions";
 const form = document.getElementById("transaction-form");
-const transactions = []
+const transactions = [];
+let filterTransactions = [];
 const transactionList = document.getElementById("transaction-list");
 form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -31,7 +32,7 @@ form.addEventListener("submit", (event) => {
          },
         body: JSON.stringify(transaction)
     })
-    .then(response => response.json())
+    .then(handleResponse)
     .then(data => {
         console.log("Transaction added", data);
         loadTransactions();
@@ -39,6 +40,23 @@ form.addEventListener("submit", (event) => {
     })
     .catch(error => console.error("Error:", error));
 });
+
+function applyFilters() {
+
+    const type = document.getElementById("filter-type").value;
+    const category = document.getElementById("filter-category").value;
+
+    filterTransactions = transactions.filter(t => {
+        const typeMatch = !type || t.type.toLowerCase() === type.toLowerCase();
+        const categoryMatch = !category || t.category.toLowerCase() === category.toLowerCase();
+
+        return typeMatch && categoryMatch;
+    });
+    renderTransactions();
+}
+document.getElementById("filter-type").addEventListener("change", applyFilters);
+document.getElementById("filter-category").addEventListener("change", applyFilters);
+
 
 const logoutBtn = document.createElement("button");
 logoutBtn.id = "logout-btn";
@@ -58,149 +76,154 @@ document.querySelector("header").appendChild(logoutBtn);
 function renderTransactions() {
     transactionList.innerHTML = "";
     
-    transactions.forEach((t) => {
+    filterTransactions.forEach((t) => {
         const date = new Date (t.date).toLocaleDateString('en-US', {
         month: "short",
         day: "numeric",
         year: "numeric"
     });
-        const li = document.createElement("li");
-        li.textContent = `${capitalize(t.description)} - $${t.amount} - ${capitalize(t.category)} (${t.type}) - ${date}`;
+
+    
+    
+    const li = document.createElement("li");
+    li.textContent = `${capitalize(t.description)} - $${t.amount} - ${capitalize(t.category)} (${t.type}) - ${date}`;
+    
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    
+    deleteBtn.addEventListener("click", () => {
+        const confirmed = confirm("Are you sure you want to delete this transaction?");
+        if (!confirmed) {
+            return;
+        }
         
-        const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "Delete";
-
-        deleteBtn.addEventListener("click", () => {
-            const confirmed = confirm("Are you sure you want to delete this transaction?");
-            if (!confirmed) {
-                return;
+        fetch(`${API_URL}/${t.id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`
             }
-
+        })
+        .then(handleResponse)
+        .then(() => {
+            loadTransactions()
+        })
+        .catch(error => console.error("Error:", error));
+    });
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+    editBtn.addEventListener("click", () => {
+        li.innerHTML = `
+        <input id="edit-desc" value="${t.description}" />
+        <input id="edit-amount" type="number" value="${t.amount}" />
+        <input id="edit-category" value="${t.category}" />
+        <select id="edit-type">
+        <option value="income" ${t.type.toLowerCase() === 'income' ? 'selected' : ''}>Income</option>
+        <option value="expense" ${t.type.toLowerCase() === 'expense' ? 'selected' : ''}>Expense</option>
+        </select>
+        <button id="save-btn">Save</button>
+        <button id="cancel-btn">Cancel</button>
+        `;
+        document.getElementById("save-btn").addEventListener("click", () => {
+            const updated = {
+                description: document.getElementById("edit-desc").value,
+                amount: Number(document.getElementById("edit-amount").value),
+                category: document.getElementById("edit-category").value,
+                type: document.getElementById("edit-type").value
+            };
             fetch(`${API_URL}/${t.id}`, {
-                method: "DELETE",
-                headers: {
+                method: "PUT",
+                headers: { 
+                    "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
-                }
-            })
-            .then(() => {
-                loadTransactions();
-            })
-            .catch(error => console.error("Error:", error));
-        });
-        const editBtn = document.createElement("button");
-        editBtn.textContent = "Edit";
-        editBtn.addEventListener("click", () => {
-            li.innerHTML = `
-            <input id="edit-desc" value="${t.description}" />
-            <input id="edit-amount" type="number" value="${t.amount}" />
-            <input id="edit-category" value="${t.category}" />
-            <select id="edit-type">
-                <option value="income" ${t.type.toLowerCase() === 'income' ? 'selected' : ''}>Income</option>
-                <option value="expense" ${t.type.toLowerCase() === 'expense' ? 'selected' : ''}>Expense</option>
-            </select>
-            <button id="save-btn">Save</button>
-            <button id="cancel-btn">Cancel</button>
-            `;
-            document.getElementById("save-btn").addEventListener("click", () => {
-                const updated = {
-                    description: document.getElementById("edit-desc").value,
-                    amount: Number(document.getElementById("edit-amount").value),
-                    category: document.getElementById("edit-category").value,
-                    type: document.getElementById("edit-type").value
-                };
-                fetch(`${API_URL}/${t.id}`, {
-                    method: "PUT",
-                    headers: { 
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                     },
-                    body: JSON.stringify(updated)
-                })
-                .then(() => loadTransactions())
-                .catch(error => console.error("Error", error));
-            });
-
-            document.getElementById("cancel-btn").addEventListener("click", () => {
-                loadTransactions();
-            });
-        });
-
-        li.appendChild(editBtn); 
-        li.appendChild(deleteBtn);
-        transactionList.appendChild(li);
-    });
-    let income = 0;
-    let expense = 0;
-    let categoryTotal = {};
-    transactions.forEach((t) => {
-        if (t.type.toLowerCase() === "income") {
-            income += t.amount;
-        }
-        if (t.type.toLowerCase() === "expense") {
-            expense += t.amount;
-          
-            if (!categoryTotal[capitalize(t.category)]) {
-                categoryTotal[capitalize(t.category)] = 0;
-            }
-            categoryTotal[capitalize(t.category)] += t.amount;
-        }
-    });
-
-    const balance = income - expense;
-    if (window.categoryChart) {
-        window.categoryChart.destroy();
-    }
-    const ctx = document.getElementById("category-chart").getContext("2d");
-    window.categoryChart = new Chart(ctx, {
-        type: "doughnut",
-        data: {
-            labels: Object.keys(categoryTotal),
-            datasets: [{
-                data: Object.values(categoryTotal),
-                backgroundColor: [
-                    "#2980b9",
-                    "#27ae60",
-                    "#e74c3c",
-                    "#f39c12",
-                    "#8e44ad",
-                    "#16a085",
-                    "#d35400"
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: "bottom"
                 },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return ` ${context.label}: $${context.parsed.toFixed(2)}`;
-                        }
+                body: JSON.stringify(updated)
+            })
+            .then(handleResponse)
+            .then(() => loadTransactions())
+            .catch(error => console.error("Error", error));
+        });
+        
+        document.getElementById("cancel-btn").addEventListener("click", () => {
+            loadTransactions();
+        });
+    });
+    
+    li.appendChild(editBtn); 
+    li.appendChild(deleteBtn);
+    transactionList.appendChild(li);
+});
+let income = 0;
+let expense = 0;
+let categoryTotal = {};
+transactions.forEach((t) => {
+    if (t.type.toLowerCase() === "income") {
+        income += t.amount;
+    }
+    if (t.type.toLowerCase() === "expense") {
+        expense += t.amount;
+        
+        if (!categoryTotal[capitalize(t.category)]) {
+            categoryTotal[capitalize(t.category)] = 0;
+        }
+        categoryTotal[capitalize(t.category)] += t.amount;
+    }
+});
+
+const balance = income - expense;
+if (window.categoryChart) {
+    window.categoryChart.destroy();
+}
+const ctx = document.getElementById("category-chart").getContext("2d");
+window.categoryChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+        labels: Object.keys(categoryTotal),
+        datasets: [{
+            data: Object.values(categoryTotal),
+            backgroundColor: [
+                "#2980b9",
+                "#27ae60",
+                "#e74c3c",
+                "#f39c12",
+                "#8e44ad",
+                "#16a085",
+                "#d35400"
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: "bottom"
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return ` ${context.label}: $${context.parsed.toFixed(2)}`;
                     }
                 }
             }
         }
-    });
-    const categoryList = document.getElementById("category-list");
-    categoryList.innerHTML = "";
-    
-    const total = Object.values(categoryTotal).reduce((a,b) => a + b, 0);
+    }
+});
+const categoryList = document.getElementById("category-list");
+categoryList.innerHTML = "";
 
-    Object.entries(categoryTotal).forEach(([category, amount]) => {
-        const li = document.createElement("li");
-        const percentage = ((amount / total) * 100).toFixed(1);
-        li.textContent = `${category}: $${amount.toFixed(2)} (${percentage}%)`;
-        categoryList.appendChild(li);
-    });
-    document.getElementById("total-income").textContent = `Income: $${income.toFixed(2)}`;
-    document.getElementById("total-expense").textContent = `Expense: $${expense.toFixed(2)}`;
-    document.getElementById("total-balance").textContent = `Balance: $${balance.toFixed(2)}`;
+const total = Object.values(categoryTotal).reduce((a,b) => a + b, 0);
 
-    const balanceEl = document.getElementById("total-balance");
-    balanceEl.style.color = balance < 0 ? "#c0392b" : "#1a3c5e";
+Object.entries(categoryTotal).forEach(([category, amount]) => {
+    const li = document.createElement("li");
+    const percentage = ((amount / total) * 100).toFixed(1);
+    li.textContent = `${category}: $${amount.toFixed(2)} (${percentage}%)`;
+    categoryList.appendChild(li);
+});
+document.getElementById("total-income").textContent = `Income: $${income.toFixed(2)}`;
+document.getElementById("total-expense").textContent = `Expense: $${expense.toFixed(2)}`;
+document.getElementById("total-balance").textContent = `Balance: $${balance.toFixed(2)}`;
+
+const balanceEl = document.getElementById("total-balance");
+balanceEl.style.color = balance < 0 ? "#c0392b" : "#1a3c5e";
 }
 
 function loadTransactions() {
@@ -210,18 +233,50 @@ function loadTransactions() {
         }
     })
     
-    .then(response => response.json())
+    .then(handleResponse)
     .then(data => {
         transactions.length = 0;
         data.forEach(t=> transactions.push(t));
+        
+        filterTransactions = [...transactions];
+        updateCategoryFilter();
         renderTransactions(); 
     });
+}
+
+function handleResponse(response) {
+    if (response.status === 401) {
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+        return;
+    }
+    return response.json();
 }
 
 function capitalize(str) {
     return str[0].toUpperCase() + str.slice(1);
 }
 
+function updateCategoryFilter() {
+    const filterCategory = document.getElementById("filter-category");
+    const categories = new Set();
+    
+    transactions.forEach(t => {
+        if (t.type.toLowerCase() === "expense") {
+            categories.add(capitalize(t.category));
+        }
+    });
+    categories.forEach(category => {
+        const alreadyExist = [...filterCategory.options]
+        .some(option => option.value === category);
 
+        if (!alreadyExist) {
+            const option = document.createElement("option");
+            option.value = category;
+            option.textContent = category;
+            filterCategory.appendChild(option);
+        }
+    });
+}
 
 loadTransactions();

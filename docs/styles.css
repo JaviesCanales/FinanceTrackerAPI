@@ -247,3 +247,18 @@ header h1 {
     outline: none;
     border-color: #1a3c5e;
 }
+
+#see-all-btn, #see-less-btn {
+    background-color: #1a3c5e !important;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+}
+
+#see-all-btn:hover, #see-less-btn:hover {
+    background-color: #16324f;
+}

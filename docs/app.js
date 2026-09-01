@@ -6,6 +6,7 @@ const API_URL = "https://financetrackerapi-production-6cf0.up.railway.app/api/tr
 const form = document.getElementById("transaction-form");
 const transactions = [];
 let filterTransactions = [];
+let showAll = false;
 const transactionList = document.getElementById("transaction-list");
 form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -75,14 +76,17 @@ document.querySelector("header").appendChild(logoutBtn);
 
 function renderTransactions() {
     transactionList.innerHTML = "";
+
+    const visibleTransactions = showAll ? filterTransactions : filterTransactions.slice(-10);
     
-    filterTransactions.forEach((t) => {
+    visibleTransactions.forEach((t) => {
         const date = new Date (t.date).toLocaleDateString('en-US', {
         month: "short",
         day: "numeric",
         year: "numeric"
     });
 
+    
     
     
     const li = document.createElement("li");
@@ -152,6 +156,29 @@ function renderTransactions() {
     li.appendChild(deleteBtn);
     transactionList.appendChild(li);
 });
+
+if (!showAll && filterTransactions.length > 10) {
+    const seeAllBtn = document.createElement("button");
+    seeAllBtn.textContent = "See All Transactions";
+    seeAllBtn.id = "see-all-btn";
+    seeAllBtn.addEventListener("click", () => {
+        showAll = true;
+        renderTransactions();
+    });
+    transactionList.appendChild(seeAllBtn);
+}
+
+if (showAll && filterTransactions.length > 10) {
+    const seeLessBtn = document.createElement("button");
+    seeLessBtn.textContent = "Show Less";
+    seeLessBtn.id = "see-less-btn";
+    seeLessBtn.addEventListener("click", () => {
+        showAll = false;
+        renderTransactions();
+    });
+    transactionList.appendChild(seeLessBtn);
+}
+
 let income = 0;
 let expense = 0;
 let categoryTotal = {};

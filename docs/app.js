@@ -135,7 +135,7 @@ function renderTransactions() {
                 type: document.getElementById("edit-type").value
             };
             fetch(`${API_URL}/${t.id}`, {
-                method: "PUT",
+                method: "PATCH",
                 headers: { 
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`

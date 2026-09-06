@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.SignalR;
 
 namespace FinanceTrackerAPI.Models
 {
@@ -8,11 +9,13 @@ namespace FinanceTrackerAPI.Models
     {
         public int Id { get; set; }
         [Required]
+        public int UserId { get; set; }
+        [Required]
         public string Description { get; set; }
         [Required]
         [Range(0.01, double.MaxValue)]
         public decimal Amount { get; set; }
-        
+        [Required]
         public string Category { get; set; }
         [Required]
         public string Type {get; set; }

@@ -2,11 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using FinanceTrackerAPI.Models;
 using FinanceTrackerAPI.Data;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace FinanceTrackerAPI.Controllers
 {
     [ApiController]
-    //[Authorize]
+    [Authorize]
     [Route("api/transactions")]
     public class TransactionController : ControllerBase
     {
@@ -20,9 +21,14 @@ namespace FinanceTrackerAPI.Controllers
         [HttpGet]
         public IActionResult GetTransactions([FromQuery] string? type, string? category)
         {
-            var query = _context.Transactions.AsQueryable();
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var query = _context.Transactions
+                .Where(t => t.UserId == userId)
+                .AsQueryable();
+            Console.WriteLine($"USER ID FROM TOKEN: {userId}");
             if (!string.IsNullOrEmpty(type))
             {
+
                 query = query.Where(t => t.Type.ToLower() == type.ToLower());
             }
 
@@ -43,45 +49,69 @@ namespace FinanceTrackerAPI.Controllers
             {
                 return BadRequest();
             } 
-            if (transaction.Amount < 1)
+            if (transaction.Amount <= 0)
             {
-                return BadRequest();
+                return BadRequest("Amount must be greater than 0.00.");
             }
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            transaction.UserId = userId;
+
             _context.Transactions.Add(transaction);      
             _context.SaveChanges();
-            return CreatedAtAction(nameof(GetTransactions), transaction);     
+            return CreatedAtAction(
+            nameof(GetId),
+            new { id = transaction.Id },
+            transaction
+            );     
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteTransaction(int id)
         {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
             var transaction = _context.Transactions.Find(id);
             if (transaction == null)
             {
                 return NotFound();
             }
+            if (transaction.UserId != userId) 
+            {
+                return Forbid();
+            }
             _context.Transactions.Remove(transaction);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(GetTransactions), transaction);
+            return NoContent();
         }
 
         [HttpGet("{id}")]
         public IActionResult GetId(int id)
         {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var transaction = _context.Transactions.Find(id);
             if (transaction == null)
             {
                 return NotFound();
             }
+            if (transaction.UserId != userId)
+            {
+                return Forbid();
+            }
             return Ok(transaction);
         }
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public IActionResult EditTransaction(int id, [FromBody] Transaction updatedtransaction)
         {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
             var transaction = _context.Transactions.Find(id);
             if (transaction == null)
             {
                 return NotFound();
+            }
+            if (transaction.UserId != userId) 
+            {
+                return Forbid();
             }
             if (updatedtransaction.Type.ToLower() != "expense" && updatedtransaction.Type.ToLower() != "income")
             {
@@ -94,6 +124,10 @@ namespace FinanceTrackerAPI.Controllers
             if (updatedtransaction.Amount != null)
             {
                 transaction.Amount = updatedtransaction.Amount;
+            }
+            if (updatedtransaction.Amount <= 0)
+            {
+                return BadRequest("Amount must be greater than 0.00.");
             }
             if (updatedtransaction.Category != null)
             {

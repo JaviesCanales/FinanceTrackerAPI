@@ -257,6 +257,8 @@ header h1 {
     cursor: pointer;
     margin-top: 10px;
     width: 100%;
+    position: sticky;
+    bottom: 20px;
 }
 
 #see-all-btn:hover, #see-less-btn:hover {

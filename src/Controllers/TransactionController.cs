@@ -25,7 +25,7 @@ namespace FinanceTrackerAPI.Controllers
             var query = _context.Transactions
                 .Where(t => t.UserId == userId)
                 .AsQueryable();
-            Console.WriteLine($"USER ID FROM TOKEN: {userId}");
+            
             if (!string.IsNullOrEmpty(type))
             {
 
@@ -121,13 +121,13 @@ namespace FinanceTrackerAPI.Controllers
             {
                 transaction.Description = updatedtransaction.Description;
             }
-            if (updatedtransaction.Amount != null)
-            {
-                transaction.Amount = updatedtransaction.Amount;
-            }
             if (updatedtransaction.Amount <= 0)
             {
                 return BadRequest("Amount must be greater than 0.00.");
+            }
+            if (updatedtransaction.Amount != null)
+            {
+                transaction.Amount = updatedtransaction.Amount;
             }
             if (updatedtransaction.Category != null)
             {

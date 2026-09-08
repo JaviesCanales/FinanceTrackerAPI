@@ -77,7 +77,7 @@ document.querySelector("header").appendChild(logoutBtn);
 function renderTransactions() {
     transactionList.innerHTML = "";
 
-    const visibleTransactions = showAll ? filterTransactions : filterTransactions.slice(-10);
+    const visibleTransactions = showAll ? filterTransactions : filterTransactions.slice(0, 10);
     
     visibleTransactions.forEach((t) => {
         const date = new Date (t.date).toLocaleDateString('en-US', {
@@ -175,6 +175,7 @@ if (showAll && filterTransactions.length > 10) {
     seeLessBtn.addEventListener("click", () => {
         showAll = false;
         renderTransactions();
+        window.scrollTo({ top: 0, behavior: "smooth" });
     });
     transactionList.appendChild(seeLessBtn);
 }
@@ -264,6 +265,7 @@ function loadTransactions() {
     .then(data => {
         transactions.length = 0;
         data.forEach(t=> transactions.push(t));
+        transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
         
         filterTransactions = [...transactions];
         updateCategoryFilter();

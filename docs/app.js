@@ -7,6 +7,7 @@ const form = document.getElementById("transaction-form");
 const transactions = [];
 let filterTransactions = [];
 let showAll = false;
+let showAllMonths = false;
 const transactionList = document.getElementById("transaction-list");
 form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -86,7 +87,56 @@ function renderTransactions() {
         year: "numeric"
     });
 
-    
+    const grouped = {};
+
+    transactions.forEach(t => {
+        const month = new Date(t.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        if (!grouped[month]) {
+            grouped[month] = []
+        }
+        grouped[month].push(t);
+    });
+
+    const monthlyCards = document.getElementById("monthly-cards");
+    monthlyCards.innerHTML = "";
+
+    const monthKeys = Object.keys(grouped);
+    const visibleMonths = showAllMonths ? monthKeys : monthKeys.slice(0, 1);
+
+    visibleMonths.forEach(month => {
+        const monthTransactions = grouped[month];
+        
+        const income = monthTransactions
+            .filter(t => t.type.toLowerCase() === "income")
+            .reduce((a, t) => a + t.amount, 0);
+
+        const expense = monthTransactions
+            .filter(t => t.type.toLowerCase() === "expense")
+            .reduce((a, t) => a + t.amount, 0);
+
+        const balance = income - expense;
+
+        const card = document.createElement("div");
+        card.className = "monthly-card";
+        card.innerHTML = `
+            <h3>${month}</h3>
+            <p>Income: $${income.toFixed(2)}</p>
+            <p>Expenses: $${expense.toFixed(2)}</p>
+            <p>Balance: $${balance.toFixed(2)}</p>
+        `;
+        monthlyCards.appendChild(card);
+    });
+
+    if (monthKeys.length > 1) {
+        const monthBtn = document.createElement("button");
+        monthBtn.id = "month-toggle-btn";
+        monthBtn.textContent = showAllMonths ? "Show Less" : "View All Monthly Summaries";
+        monthBtn.addEventListener("click", () => {
+            showAllMonths = !showAllMonths;
+            renderTransactions();
+        });
+        monthlyCards.appendChild(monthBtn);
+    }
     
     
     const li = document.createElement("li");

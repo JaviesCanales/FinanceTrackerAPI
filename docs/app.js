@@ -8,6 +8,7 @@ const transactions = [];
 let filterTransactions = [];
 let showAll = false;
 let showAllMonths = false;
+let statsPeriod = "month";
 const transactionList = document.getElementById("transaction-list");
 form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -74,138 +75,180 @@ logoutBtn.addEventListener("click", () => {
 });
 
 document.querySelector("header").appendChild(logoutBtn);
+document.getElementById("btn-month").addEventListener("click" , () => {
+    statsPeriod = "month";
+    document.getElementById("btn-month").classList.add("active");
+    document.getElementById("btn-year").classList.remove("active");
+    renderTransactions();
+});
+
+document.getElementById("btn-year").addEventListener("click", () => {
+    statsPeriod = "year";
+    document.getElementById("btn-year").classList.add("active");
+    document.getElementById("btn-month").classList.remove("active");
+    renderTransactions();
+});
 
 function renderTransactions() {
-    transactionList.innerHTML = "";
+transactionList.innerHTML = "";
 
     const visibleTransactions = showAll ? filterTransactions : filterTransactions.slice(0, 10);
     
     visibleTransactions.forEach((t) => {
         const date = new Date (t.date).toLocaleDateString('en-US', {
-        month: "short",
-        day: "numeric",
-        year: "numeric"
-    });
-
-    const grouped = {};
-
-    transactions.forEach(t => {
-        const month = new Date(t.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-        if (!grouped[month]) {
-            grouped[month] = []
-        }
-        grouped[month].push(t);
-    });
-
-    const monthlyCards = document.getElementById("monthly-cards");
-    monthlyCards.innerHTML = "";
-
-    const monthKeys = Object.keys(grouped);
-    const visibleMonths = showAllMonths ? monthKeys : monthKeys.slice(0, 1);
-
-    visibleMonths.forEach(month => {
-        const monthTransactions = grouped[month];
-        
-        const income = monthTransactions
-            .filter(t => t.type.toLowerCase() === "income")
-            .reduce((a, t) => a + t.amount, 0);
-
-        const expense = monthTransactions
-            .filter(t => t.type.toLowerCase() === "expense")
-            .reduce((a, t) => a + t.amount, 0);
-
-        const balance = income - expense;
-
-        const card = document.createElement("div");
-        card.className = "monthly-card";
-        card.innerHTML = `
-            <h3>${month}</h3>
-            <p>Income: $${income.toFixed(2)}</p>
-            <p>Expenses: $${expense.toFixed(2)}</p>
-            <p>Balance: $${balance.toFixed(2)}</p>
-        `;
-        monthlyCards.appendChild(card);
-    });
-
-    if (monthKeys.length > 1) {
-        const monthBtn = document.createElement("button");
-        monthBtn.id = "month-toggle-btn";
-        monthBtn.textContent = showAllMonths ? "Show Less" : "View All Monthly Summaries";
-        monthBtn.addEventListener("click", () => {
-            showAllMonths = !showAllMonths;
-            renderTransactions();
+            month: "short",
+            day: "numeric",
+            year: "numeric"
         });
-        monthlyCards.appendChild(monthBtn);
-    }
-    
-    
-    const li = document.createElement("li");
-    li.textContent = `${capitalize(t.description)} - $${t.amount} - ${capitalize(t.category)} (${t.type}) - ${date}`;
-    
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "Delete";
-    
-    deleteBtn.addEventListener("click", () => {
-        const confirmed = confirm("Are you sure you want to delete this transaction?");
-        if (!confirmed) {
-            return;
-        }
+        const li = document.createElement("li");
+        li.textContent = `${capitalize(t.description)} - $${t.amount} - ${capitalize(t.category)} (${t.type}) - ${date}`;
         
-        fetch(`${API_URL}/${t.id}`, {
-            method: "DELETE",
-            headers: {
-                "Authorization": `Bearer ${token}`
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Delete";
+            
+            deleteBtn.addEventListener("click", () => {
+                const confirmed = confirm("Are you sure you want to delete this transaction?");
+                if (!confirmed) {
+                    return;
+                }
+                
+                fetch(`${API_URL}/${t.id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                .then(handleResponse)
+                .then(() => {
+                    loadTransactions()
+                })
+                .catch(error => console.error("Error:", error));
+            });
+            const editBtn = document.createElement("button");
+            editBtn.textContent = "Edit";
+            editBtn.addEventListener("click", () => {
+                li.innerHTML = `
+                <input id="edit-desc" value="${t.description}" />
+                <input id="edit-amount" type="number" value="${t.amount}" />
+                <input id="edit-category" value="${t.category}" />
+                <select id="edit-type">
+                <option value="income" ${t.type.toLowerCase() === 'income' ? 'selected' : ''}>Income</option>
+                <option value="expense" ${t.type.toLowerCase() === 'expense' ? 'selected' : ''}>Expense</option>
+                </select>
+                <button id="save-btn">Save</button>
+                <button id="cancel-btn">Cancel</button>
+                `;
+                document.getElementById("save-btn").addEventListener("click", () => {
+                    const updated = {
+                        description: document.getElementById("edit-desc").value,
+                        amount: Number(document.getElementById("edit-amount").value),
+                        category: document.getElementById("edit-category").value,
+                        type: document.getElementById("edit-type").value
+                    };
+                    fetch(`${API_URL}/${t.id}`, {
+                        method: "PATCH",
+                        headers: { 
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: JSON.stringify(updated)
+                    })
+                    .then(handleResponse)
+                    .then(() => loadTransactions())
+                    .catch(error => console.error("Error", error));
+                });
+                
+                document.getElementById("cancel-btn").addEventListener("click", () => {
+                    loadTransactions();
+                });
+            });
+            
+            li.appendChild(editBtn); 
+            li.appendChild(deleteBtn);
+            transactionList.appendChild(li);
+        });
+
+        const now = new Date()
+        const statTransactions = transactions.filter(t => {
+            const tDate = new Date(t.date);
+            if (statsPeriod === "month") {
+                return tDate.getMonth() === now.getMonth() && tDate.getFullYear() === now.getFullYear();
+            } else {
+                return tDate.getFullYear() === now.getFullYear();
             }
-        })
-        .then(handleResponse)
-        .then(() => {
-            loadTransactions()
-        })
-        .catch(error => console.error("Error:", error));
-    });
-    const editBtn = document.createElement("button");
-    editBtn.textContent = "Edit";
-    editBtn.addEventListener("click", () => {
-        li.innerHTML = `
-        <input id="edit-desc" value="${t.description}" />
-        <input id="edit-amount" type="number" value="${t.amount}" />
-        <input id="edit-category" value="${t.category}" />
-        <select id="edit-type">
-        <option value="income" ${t.type.toLowerCase() === 'income' ? 'selected' : ''}>Income</option>
-        <option value="expense" ${t.type.toLowerCase() === 'expense' ? 'selected' : ''}>Expense</option>
-        </select>
-        <button id="save-btn">Save</button>
-        <button id="cancel-btn">Cancel</button>
-        `;
-        document.getElementById("save-btn").addEventListener("click", () => {
-            const updated = {
-                description: document.getElementById("edit-desc").value,
-                amount: Number(document.getElementById("edit-amount").value),
-                category: document.getElementById("edit-category").value,
-                type: document.getElementById("edit-type").value
-            };
-            fetch(`${API_URL}/${t.id}`, {
-                method: "PATCH",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify(updated)
-            })
-            .then(handleResponse)
-            .then(() => loadTransactions())
-            .catch(error => console.error("Error", error));
         });
         
-        document.getElementById("cancel-btn").addEventListener("click", () => {
-            loadTransactions();
+        let income = 0;
+        let expense = 0;
+        let categoryTotal = {};
+        statTransactions.forEach((t) => {
+            if (t.type.toLowerCase() === "income") {
+                income += t.amount;
+            }
+            if (t.type.toLowerCase() === "expense") {
+                expense += t.amount;
+                
+                if (!categoryTotal[capitalize(t.category)]) {
+                    categoryTotal[capitalize(t.category)] = 0;
+                }
+                categoryTotal[capitalize(t.category)] += t.amount;
+            }
         });
-    });
-    
-    li.appendChild(editBtn); 
-    li.appendChild(deleteBtn);
-    transactionList.appendChild(li);
-});
+        
+        const grouped = {};
+        
+        transactions.forEach(t => {
+            const month = new Date(t.date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            if (!grouped[month]) {
+                grouped[month] = []
+            }
+            grouped[month].push(t);
+        });
+        
+        const monthlyCards = document.getElementById("monthly-cards");
+        monthlyCards.innerHTML = "";
+        
+        const monthKeys = Object.keys(grouped);
+        const visibleMonths = showAllMonths ? monthKeys : monthKeys.slice(1, 2);
+        
+        visibleMonths.forEach(month => {
+            const monthTransactions = grouped[month];
+            
+            const income = monthTransactions
+                .filter(t => t.type.toLowerCase() === "income")
+                .reduce((a, t) => a + t.amount, 0);
+        
+            const expense = monthTransactions
+                .filter(t => t.type.toLowerCase() === "expense")
+                .reduce((a, t) => a + t.amount, 0);
+        
+            const balance = income - expense;
+        
+            const card = document.createElement("div");
+            card.className = "monthly-card";
+            card.innerHTML = `
+                <h3>${month}</h3>
+                <p>Income: $${income.toFixed(2)}</p>
+                <p>Expenses: $${expense.toFixed(2)}</p>
+                <p>Balance: $${balance.toFixed(2)}</p>
+            `;
+            monthlyCards.appendChild(card);
+        });
+        
+        if (monthKeys.length > 1) {
+            const monthBtn = document.createElement("button");
+            monthBtn.id = "month-toggle-btn";
+            monthBtn.textContent = showAllMonths ? "Show Less" : "View All Monthly Summaries";
+            monthBtn.addEventListener("click", () => {
+                showAllMonths = !showAllMonths;
+                renderTransactions();
+            });
+    monthlyCards.appendChild(monthBtn);
+}
+
+
+
+
 
 if (!showAll && filterTransactions.length > 10) {
     const seeAllBtn = document.createElement("button");
@@ -230,22 +273,6 @@ if (showAll && filterTransactions.length > 10) {
     transactionList.appendChild(seeLessBtn);
 }
 
-let income = 0;
-let expense = 0;
-let categoryTotal = {};
-transactions.forEach((t) => {
-    if (t.type.toLowerCase() === "income") {
-        income += t.amount;
-    }
-    if (t.type.toLowerCase() === "expense") {
-        expense += t.amount;
-        
-        if (!categoryTotal[capitalize(t.category)]) {
-            categoryTotal[capitalize(t.category)] = 0;
-        }
-        categoryTotal[capitalize(t.category)] += t.amount;
-    }
-});
 
 const balance = income - expense;
 if (window.categoryChart) {

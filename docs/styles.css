@@ -313,3 +313,24 @@ header h1 {
 #month-toggle-btn:hover {
     background-color: #16324f;
 }
+
+#stats-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.stats-btn {
+    padding: 6px 16px;
+    border: 1px solid #1a3c5e;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #1a3c5e;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.stats-btn.active {
+    background-color: #1a3c5e;
+    color: #ffffff;
+}

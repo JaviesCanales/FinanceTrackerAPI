@@ -334,3 +334,28 @@ header h1 {
     background-color: #1a3c5e;
     color: #ffffff;
 }
+
+.month-transactions {
+    list-style: none;
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.month-transactions li {
+    background-color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #dde3ec;
+    font-size: 0.9rem;
+    color: #333333;
+}
+
+.monthly-card {
+    cursor: pointer;
+}
+
+.monthly-card:hover {
+    border-color: #1a3c5e;
+}

@@ -9,6 +9,7 @@ let filterTransactions = [];
 let showAll = false;
 let showAllMonths = false;
 let statsPeriod = "month";
+let expandedMonth = null;
 const transactionList = document.getElementById("transaction-list");
 form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -194,6 +195,8 @@ transactionList.innerHTML = "";
                 categoryTotal[capitalize(t.category)] += t.amount;
             }
         });
+
+
         
         const grouped = {};
         
@@ -233,7 +236,28 @@ transactionList.innerHTML = "";
                 <p>Balance: $${balance.toFixed(2)}</p>
             `;
             monthlyCards.appendChild(card);
+
+            if (expandedMonth === month) {
+                const ul = document.createElement("ul");
+                ul.className = "month-transactions";
+
+                monthTransactions.forEach(t => {
+                    const li = document.createElement("li");
+                    const date = new Date(t.date).toLocaleDateString('en-US', {
+                        month: "short", day: "numeric", year: "numeric"
+                    });
+                    li.textContent = `${capitalize(t.description)} - $${t.amount} - ${capitalize(t.category)} (${t.type}) - ${date}`;
+                    ul.appendChild(li);
+                });
+
+                monthlyCards.appendChild(ul);
+            }
+            card.addEventListener("click", () => {
+                expandedMonth = expandedMonth === month ? null : month;
+                renderTransactions();
+            });
         });
+
         
         if (monthKeys.length > 1) {
             const monthBtn = document.createElement("button");

@@ -364,6 +364,7 @@ function loadTransactions() {
     
     .then(handleResponse)
     .then(data => {
+        if (!data) return;
         transactions.length = 0;
         data.forEach(t=> transactions.push(t));
         transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -375,6 +376,7 @@ function loadTransactions() {
 }
 
 function handleResponse(response) {
+    console.log("Response status:", response.status);
     if (response.status === 401) {
         localStorage.removeItem("token");
         window.location.href = "login.html";
